@@ -3,7 +3,6 @@ from flask_cors import CORS
 from flasgger import Swagger
 from api.routes import api_bp
 
-
 def create_app():
     """Application factory for the Flask backend."""
     app = Flask(__name__)
@@ -37,11 +36,14 @@ def create_app():
           200:
             description: Returns the status of the engine
         """
-        return {"status": "Zakat Selangor KBES Engine is running."}, 200
+        return {"status": "Zakat Selangor KBES Engine is running on Vercel."}, 200
 
     return app
 
+# --- VERCEL REQUIREMENT ---
+# Vercel needs the 'app' instance exposed globally at the module level.
+app = create_app()
 
 if __name__ == '__main__':
-    app = create_app()
+    # This block is only used when running locally (python app.py)
     app.run(debug=True, port=5000)
