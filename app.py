@@ -1,7 +1,10 @@
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask
 from flask_cors import CORS
 from flasgger import Swagger
 from api.routes import api_bp
+
 
 def create_app():
     """Application factory for the Flask backend."""

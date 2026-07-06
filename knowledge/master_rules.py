@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Any
+from typing import Callable, Any, Optional
 from engine.working_memory import WorkingMemory
 
 
@@ -12,6 +12,7 @@ class Rule:
     description: str
     condition: Callable[[WorkingMemory], bool]
     action: Callable[[WorkingMemory], None]
+    explanation: Optional[str] = None  # Added to fix the unexpected keyword argument error
 
     def __post_init__(self):
         if not self.id.startswith('R'):

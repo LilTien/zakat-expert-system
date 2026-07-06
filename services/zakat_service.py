@@ -61,3 +61,25 @@ if __name__ == "__main__":
     print("\n--- REASONING TRACE (Notice the Agenda & Salience) ---")
     for step in result['reasoning_trace']:
         print(step)
+
+
+def process_asnaf_standard(data: dict) -> dict:
+    """
+    Handles Asnaf screening outside of the main forward-chaining rule base,
+    as specified by the system design constraints.
+    """
+    household_income = data.get('household_income', 0)
+
+    # Placeholder Had Kifayah logic matching your teammate's variables
+    had_kifayah = 9000.0  # Diri sendiri
+    had_kifayah += 3000.0 * data.get('spouse_count', 0)
+    had_kifayah += 1000.0 * data.get('child_count', 0)
+
+    is_eligible = household_income < (had_kifayah / 12)  # Assuming monthly income
+
+    return {
+        "eligible": is_eligible,
+        "had_kifayah_annual": had_kifayah,
+        "household_income": household_income,
+        "category": "Fakir/Miskin" if is_eligible else "Tidak Layak"
+    }

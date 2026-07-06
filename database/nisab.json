@@ -2,5 +2,6 @@
     "year": 2026,
     "state": "Selangor",
     "nisab_value": 24000.00,
-    "gold_price_per_gram": 320.00
+    "gold_price_per_gram_24k": 320.00,
+    "nisab_gold_grams": 85
 }
