@@ -32,6 +32,26 @@ def _assess_simpanan(wm):
     wm.add_fact('basis', 'rm')
 
 
+def _assess_gold_pawned_fixed(wm):
+    """Fixed helper for R010: nets out loan amount + storage fee before
+    converting back to an equivalent gram weight, so it still combines
+    correctly with goldWornZ / goldStoredZ in R011."""
+    weight = wm.get_fact('pawned_weight', 0)
+    price = wm.get_fact('gold_price_per_gram_24k', 320.0)
+    loan_amount = wm.get_fact('pawned_loan_amount', 0)
+    storage_fee = wm.get_fact('pawned_storage_fee', 0)
+
+    gross_value_rm = weight * price
+    net_value_rm = max(0, gross_value_rm - loan_amount - storage_fee)
+
+    # Convert back to an "equivalent gram" figure so R011 can keep
+    # summing all three gold sources as grams before R019 does the
+    # final RM conversion.
+    net_weight_equivalent = net_value_rm / price if price else 0
+
+    wm.add_fact('goldPawnedZ', net_weight_equivalent)
+
+
 def _calculate_payable(wm):
     """Helper for R019: Calculates final RM payable amount."""
     base = wm.get_fact('payableBase', 0)
@@ -107,11 +127,11 @@ def get_all_rules() -> list[Rule]:
         ),
         Rule(
             id="R010", salience=82, name="Gold Pawned",
-            description="Pawned gold value",
+            description="Pawned gold value, net of loan amount and storage fee",
             condition=lambda wm: wm.get_fact('eligible') is True and wm.get_fact('zakatType') == 'emas' and wm.get_fact(
                 'haul') is True and wm.get_fact('has_pawned_item') is True and wm.get_fact(
                 'goldPawnedZ') is None and wm.get_fact('conclusion') is None,
-            action=lambda wm: wm.add_fact('goldPawnedZ', wm.get_fact('pawned_weight', 0))
+            action=lambda wm: _assess_gold_pawned_fixed(wm)
         ),
 
         # =====================================================================
