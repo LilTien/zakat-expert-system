@@ -14,6 +14,7 @@ def _assess_pendapatan(wm):
 
     assessable = max(0, gross - deductions)
 
+    #belle
     wm.add_fact('assessableAmount', assessable)
     wm.add_fact('nisabTestValue', assessable)
     wm.add_fact('payableBase', assessable)
